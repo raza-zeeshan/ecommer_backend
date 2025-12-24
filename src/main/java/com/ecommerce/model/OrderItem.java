@@ -14,19 +14,19 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_items")
-
 public class OrderItem {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
-	@JsonIgnore
+	@JoinColumn(name = "order_id", nullable = false)
+	@JsonIgnore // Don't serialize order to avoid circular references
 	private Order order;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
 	@Column(nullable = false)
@@ -35,6 +35,18 @@ public class OrderItem {
 	@Column(nullable = false)
 	private Double price;
 
+	// Constructors
+	public OrderItem() {
+	}
+
+	public OrderItem(Order order, Product product, Integer quantity, Double price) {
+		this.order = order;
+		this.product = product;
+		this.quantity = quantity;
+		this.price = price;
+	}
+
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -75,4 +87,9 @@ public class OrderItem {
 		this.price = price;
 	}
 
+	@Override
+	public String toString() {
+		return "OrderItem{" + "id=" + id + ", product=" + product.getName() + ", quantity=" + quantity + ", price="
+				+ price + '}';
+	}
 }

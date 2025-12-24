@@ -34,45 +34,133 @@ public class OrderController {
 			Long userId = Long.valueOf(orderRequest.get("userId").toString());
 			String shippingAddress = (String) orderRequest.get("shippingAddress");
 
-			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> items = (List<Map<String, Object>>) orderRequest.get("items");
+			// Support both "items" and "orderItems" field names for flexibility
+			List<Map<String, Object>> items = null;
+
+			if (orderRequest.containsKey("orderItems")) {
+				items = (List<Map<String, Object>>) orderRequest.get("orderItems");
+			} else if (orderRequest.containsKey("items")) {
+				items = (List<Map<String, Object>>) orderRequest.get("items");
+			} else {
+				return ResponseEntity.badRequest().body(Map.of("error", "Missing items or orderItems in request"));
+			}
+
+			if (items == null || items.isEmpty()) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Cart items cannot be empty"));
+			}
 
 			List<CartItem> cartItems = items.stream().map(item -> {
 				CartItem cartItem = new CartItem();
 				cartItem.setProductId(Long.valueOf(item.get("productId").toString()));
 				cartItem.setQuantity(Integer.valueOf(item.get("quantity").toString()));
+
+				// Optional: set price if provided
+				if (item.containsKey("price")) {
+					cartItem.setPrice(Double.valueOf(item.get("price").toString()));
+				}
+
 				return cartItem;
 			}).toList();
 
 			Order order = orderService.createOrder(userId, cartItems, shippingAddress);
+
+			if (order == null) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Failed to create order"));
+			}
+
 			return ResponseEntity.ok(order);
+		} catch (NumberFormatException e) {
+			return ResponseEntity.badRequest().body(Map.of("error", "Invalid data format: " + e.getMessage()));
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+			e.printStackTrace(); // Log the error
+			return ResponseEntity.badRequest().body(Map.of("error", "Order creation failed: " + e.getMessage()));
 		}
 	}
 
+//	@GetMapping("/user/{userId}")
+//	@PreAuthorize("isAuthenticated()")
+//	public ResponseEntity<?> getUserOrders(@PathVariable Long userId) {
+//		try {
+//			List<Order> orders = orderService.getUserOrders(userId);
+//
+//			if (orders == null) {
+//				return ResponseEntity.ok(List.of()); // Return empty list if null
+//			}
+//
+//			return ResponseEntity.ok(orders);
+//		} catch (Exception e) {
+//			return ResponseEntity.badRequest().body(Map.of("error", "Failed to fetch user orders: " + e.getMessage()));
+//		}
+//	}
 	@GetMapping("/user/{userId}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<Order>> getUserOrders(@PathVariable Long userId) {
-		return ResponseEntity.ok(orderService.getUserOrders(userId));
+	public ResponseEntity<?> getUserOrders(@PathVariable Long userId) {
+		try {
+			System.out.println("=== Fetching orders for user: " + userId);
+
+			List<Order> orders = orderService.getUserOrders(userId);
+
+			System.out.println("=== Found " + orders.size() + " orders");
+			System.out.println("=== Orders: " + orders);
+
+			return ResponseEntity.ok(orders);
+		} catch (Exception e) {
+			System.err.println("=== ERROR: " + e.getMessage());
+			e.printStackTrace();
+			return ResponseEntity.status(500).body(Map.of("error", "Failed to fetch orders: " + e.getMessage()));
+		}
 	}
 
 	@GetMapping
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<List<Order>> getAllOrders() {
-		return ResponseEntity.ok(orderService.getAllOrders());
+	public ResponseEntity<?> getAllOrders() {
+		try {
+			List<Order> orders = orderService.getAllOrders();
+			return ResponseEntity.ok(orders);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(Map.of("error", "Failed to fetch all orders: " + e.getMessage()));
+		}
 	}
 
 	@GetMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-		return ResponseEntity.ok(orderService.getOrderById(id));
+	public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+		try {
+			Order order = orderService.getOrderById(id);
+
+			if (order == null) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Order not found"));
+			}
+
+			return ResponseEntity.ok(order);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(Map.of("error", "Failed to fetch order: " + e.getMessage()));
+		}
 	}
 
 	@PutMapping("/{id}/status")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> statusMap) {
-		OrderStatus status = OrderStatus.valueOf(statusMap.get("status"));
-		return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+	public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> statusMap) {
+		try {
+			String statusString = statusMap.get("status");
+
+			if (statusString == null || statusString.isEmpty()) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Status cannot be empty"));
+			}
+
+			OrderStatus status = OrderStatus.valueOf(statusString);
+			Order updatedOrder = orderService.updateOrderStatus(id, status);
+
+			if (updatedOrder == null) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Order not found"));
+			}
+
+			return ResponseEntity.ok(updatedOrder);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(Map.of("error", "Invalid order status: " + e.getMessage()));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest()
+					.body(Map.of("error", "Failed to update order status: " + e.getMessage()));
+		}
 	}
 }
