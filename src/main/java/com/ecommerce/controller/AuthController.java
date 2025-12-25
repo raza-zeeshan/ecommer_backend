@@ -15,7 +15,7 @@ import com.ecommerce.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://zee-commerce-frontend.vercel.app/")
 public class AuthController {
 	@Autowired
 	private AuthService authService;

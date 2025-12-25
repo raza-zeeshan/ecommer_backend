@@ -21,7 +21,7 @@ import com.ecommerce.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://zee-commerce-frontend.vercel.app/")
 public class ProductController {
 	@Autowired
 	private ProductService productService;

@@ -22,7 +22,7 @@ import com.ecommerce.service.OrderService;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://zee-commerce-frontend.vercel.app/")
 public class OrderController {
 	@Autowired
 	private OrderService orderService;

@@ -20,7 +20,7 @@ import com.ecommerce.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://zee-commerce-frontend.vercel.app/")
 public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
