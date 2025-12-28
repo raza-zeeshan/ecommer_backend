@@ -191,18 +191,8 @@ This repository uses the **MIT License**. Add a `LICENSE` file to the repository
 
 ## Contact
 
-- Name: _Your Name_
-- Email: _your.email@example.com_
-- GitHub: https://github.com/your-username
-- LinkedIn: https://www.linkedin.com/in/your-profile
+- Name: Zeeshan Raza
+- Email: zeeshanraza0201@gmail.com
+- GitHub: https://github.com/raza-zeeshan
+- LinkedIn: https://www.linkedin.com/in/zeeshanraza01/
 
-Replace the placeholders above with your real contact info.
-
----
-
-If you'd like, I can also:
-- Add a `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` templates
-- Add OpenAPI/Swagger documentation (automatic API docs)
-- Create a `docker-compose.yml` for local PostgreSQL + app
-
-Feel free to tell me which sections you'd like adjusted or if you want me to create the LICENSE/Contributing files for you. 🔧
