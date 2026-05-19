@@ -94,9 +94,7 @@ Steps:
    # Windows (PowerShell)
    .\mvnw.cmd spring-boot:run
    ```
-
 ---
-
 ## Usage 🚀
 
 - Default server port: 8080 (configurable via `server.port`)
