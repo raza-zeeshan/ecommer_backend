@@ -5,11 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
-
 ## Project Title
 
 **E-Commerce Backend** (package: `com.ecommerce`)
-
 ---
 
 ## Description
@@ -112,7 +110,6 @@ docker run -p 8080:8080 \
   -e SPRING_DATASOURCE_PASSWORD="<pass>" \
   ecommerce-backend
 ```
-
 ---
 
 ## API Endpoints (Highlights) 🔌
