@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
+
 ## Project Title
 
 **E-Commerce Backend** (package: `com.ecommerce`)
@@ -41,6 +42,7 @@ A modular, extensible backend for an online store built with Spring Boot. It pro
 ## Project Structure 📁
 
 ```
+
 src/
   main/
     java/com/ecommerce/
