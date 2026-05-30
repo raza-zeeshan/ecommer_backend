@@ -5,7 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
-
 ## Project Title
 
 **E-Commerce Backend** (package: `com.ecommerce`)
