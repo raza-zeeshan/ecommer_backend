@@ -12,7 +12,6 @@
 ## Description
 
 A modular, extensible backend for an online store built with Spring Boot. It provides RESTful APIs for user authentication, product & category management, and order processing. The project demonstrates JWT-based authentication, role-based access (ADMIN vs USER), and persistence with PostgreSQL.
-
 ---
 ## Features ✅
 
